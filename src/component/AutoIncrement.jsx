@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-function IncrementDecrement() {
+function AutoIncrement() {
     const [count, setCount] = React.useState(0);
     const [checkClick, setCheckClick] = React.useState("");
+    const [msg, setMsg] = React.useState("")
 
     function justClicked1() {
         setCount(prevCount => prevCount + 1);
@@ -14,11 +15,34 @@ function IncrementDecrement() {
         setCheckClick("You just clicked Decrement Button");
     }
 
+    // useEffect(() => {
+    //     const intervalId = setInterval(() => {
+    //       setCount(prevCount => prevCount + 1);
+    //     }, 1000); // Update count every 1 second
     
+    //     return () => clearInterval(intervalId); // Cleanup function to stop the interval on unmount
+    //   }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCount(prevCount => {
+                if (prevCount < 64) {
+                    return prevCount + 1;
+                } else {
+                    clearInterval(interval);
+                    setMsg("You Have Reached At End")
+                    return prevCount;
+                }
+            });
+        }, 200);
+
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <>
-        <input type='number' value={count} onChange={(e)=> setCount(e.target.value)}/>
+        {/* <input type='number' value={count} onChange={(e)=> setCount(e.target.value)}/> */}
+        <h2>{msg}</h2>
             {/* <div>Count = {count}</div> */}
             <div style={{marginTop:'100px'}}>{checkClick} {count} times</div>
             <div>
@@ -39,4 +63,4 @@ function IncrementDecrement() {
     );
 }
 
-export default IncrementDecrement;
+export default AutoIncrement;
